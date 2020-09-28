@@ -1,3 +1,3 @@
 # ft_services
 
-Proyecto en proceso.
+Despliegue y orquestación de servicios con Kubernetes. Proyecto en proceso.

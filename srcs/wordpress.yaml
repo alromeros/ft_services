@@ -10,20 +10,29 @@ spec:
       targetPort: 5050
       protocol: TCP
     selector:
-      app: wordpress42
+      app: wordpress-app
      
 ---
 
 apiVersion: apps/v1
-kind: Service
+kind: Deployment
 metadata:
-    name: wordpress42
+  name: wordpress42
+  labels:
+    app: wordpress-app
 spec:
-    type: LoadBalancer
-    ports:
-    - name: http
-      port: 5050
-      targetPort: 5050
-      protocol: TCP
-    selector:
-      app: wordpress42
+  replicas: 1
+  selector:
+    matchLabels:
+      app: wordpress-app
+  template:
+    metadata:
+      labels:
+        app: wordpress-app
+    spec:
+      containers:
+      - name: wordpress42
+        image: wordpress42
+        ports:
+        - containerPort: 5050
+        imagePullPolicy: Never

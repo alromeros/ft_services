@@ -1,0 +1,62 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql42
+  labels:
+    app: mysql42
+spec:
+  type: NodePort
+  ports:
+  - port: 3306
+    targetPort: 3306
+    nodePort: 3306
+    protocol: TCP
+    name: mysql42
+  selector:
+    app: mysql42
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mysql42
+  labels:
+    app: mysql42
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql42
+  labels:
+    app: mysql42
+spec:
+  selector:
+    matchLabels:
+      app: mysql42
+  template:
+    metadata:
+      labels:
+        app: mysql42
+    spec:
+      containers:
+      - name: mysql42
+        image: mysql42
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 3306
+          name: mysql42
+        volumeMounts:
+        - name: mysql42
+          mountPath: /var/lib/mysql
+      volumes:
+      - name: mysql42
+        persistentVolumeClaim:
+          claimName: mysql42

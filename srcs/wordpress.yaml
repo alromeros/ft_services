@@ -1,38 +1,94 @@
+# apiVersion: v1
+# kind: Service
+# metadata:
+#     name: wordpress42
+# spec:
+#     type: LoadBalancer
+#     ports:
+#     - name: http
+#       port: 5050
+#       targetPort: 5050
+#       protocol: TCP
+#     selector:
+#       app: wordpress-app
+     
+# ---
+
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+#   name: wordpress42
+#   labels:
+#     app: wordpress-app
+# spec:
+#   replicas: 1
+#   selector:
+#     matchLabels:
+#       app: wordpress-app
+#   template:
+#     metadata:
+#       labels:
+#         app: wordpress-app
+#     spec:
+#       containers:
+#       - name: wordpress42
+#         image: wordpress42
+#         ports:
+#         - containerPort: 5050
+#         imagePullPolicy: Never
+
 apiVersion: v1
 kind: Service
 metadata:
-    name: wordpress42
+  name: wordpress
+  labels:
+    app: wordpress
 spec:
-    type: LoadBalancer
-    ports:
-    - name: http
-      port: 5050
+  ports:
+    - port: 5050
       targetPort: 5050
       protocol: TCP
-    selector:
-      app: wordpress-app
-     
+      name: wordpress
+  selector:
+    app: wordpress
+    tier: mysql
+  type: LoadBalancer
+
 ---
 
-apiVersion: apps/v1
+apiVersion: apps/v1 # for versions before 1.9.0 use apps/v1beta2
 kind: Deployment
 metadata:
-  name: wordpress42
+  name: wordpress
   labels:
-    app: wordpress-app
+    app: wordpress
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: wordpress-app
+      app: wordpress
+      tier: mysql
+  strategy:
+    type: Recreate
   template:
     metadata:
       labels:
-        app: wordpress-app
+        app: wordpress
+        tier: mysql
     spec:
       containers:
-      - name: wordpress42
-        image: wordpress42
+      - image: wordpress42
+        name: wordpress
+        env:
+          - name: DB_NAME
+            value: wordpress
+          - name: DB_USER
+            value: wp_admin
+          - name: DB_PASSWORD
+            value: admin
+          - name: DB_HOST
+            value: mysql-svc
         ports:
         - containerPort: 5050
-        imagePullPolicy: Never
+          name: wordpress
+        imagePullPolicy: IfNotPresent

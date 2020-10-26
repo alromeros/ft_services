@@ -1,12 +1,20 @@
 FROM alpine:latest
 
-RUN apk update\
-    && apk add --no-cache --upgrade bash\
-    && apk add mariadb mariadb-client\
-    && mkdir -p /run/mysqld/ 
+# installation
+RUN apk update \
+&& apk add mariadb mariadb-client && apk add --no-cache --upgrade bash \
+&& rm -rf /var/cache/apk/*
 
-COPY initsql.sh /
+# RUN service mysql start
+RUN mysql --version
 
-RUN chmod +x initsql.sh
+# Copy initialisation script
+COPY ./setup.sh .
+COPY ./initsql.sh .
+COPY ./wordpress.sql .
 
-CMD nohup ./initsql.sh > /dev/null 2>&1 & /usr/bin/mysql_install_db --user=root --datadir="/var/lib/mysql" && /usr/bin/mysqld --user=root --datadir="/var/lib/mysql" && initsql.sh
+# Add permission
+RUN chmod 777 setup.sh
+RUN chmod 777 initsql.sh
+
+ENTRYPOINT [ "./setup.sh" ]

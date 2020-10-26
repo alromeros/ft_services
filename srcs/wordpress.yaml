@@ -79,15 +79,6 @@ spec:
       containers:
       - image: wordpress42
         name: wordpress
-        env:
-          - name: DB_NAME
-            value: wordpress
-          - name: DB_USER
-            value: wp_admin
-          - name: DB_PASSWORD
-            value: admin
-          - name: DB_HOST
-            value: mysql-svc
         ports:
         - containerPort: 5050
           name: wordpress

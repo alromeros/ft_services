@@ -15,3 +15,4 @@ echo "ALTER USER 'wp_admin'@'%' IDENTIFIED BY 'password';" | mysql -u root --ski
 #echo "ALTER USER 'root'@'%' IDENTIFIED BY '$MYSQL_ROOT_PASSWORD';" | mysql -u root --skip-password
 echo "DROP DATABASE test" | mysql -u root --skip-password
 echo "FLUSH PRIVILEGES;" | mysql -u root --skip-password
+cat wordpress.sql | mysql wordpress -u root --skip-password

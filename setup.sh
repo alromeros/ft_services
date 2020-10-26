@@ -28,8 +28,10 @@ kubectl apply -f srcs/metallb.yaml
 srcs/nginx/init.sh
 srcs/wordpress/init.sh
 srcs/mysql/init.sh
+srcs/phpmyadmin/init.sh
 #docker build -t wordpress42 srcs/wordpress
 
 kubectl apply -f srcs/nginx.yaml
 kubectl apply -f srcs/mysql.yaml
 kubectl apply -f srcs/wordpress.yaml
+kubectl apply -f srcs/phpmyadmin.yaml

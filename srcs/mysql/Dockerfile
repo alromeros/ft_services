@@ -11,7 +11,7 @@ RUN mysql --version
 # Copy initialisation script
 COPY ./init_docker.sh .
 COPY ./setup.sh .
-COPY ./wordpress.sql .
+#COPY ./wordpress.sql .
 
 # Add permission
 RUN chmod 777 init_docker.sh

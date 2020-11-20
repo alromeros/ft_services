@@ -1,1 +1,13 @@
+mv /wordpress/* /www && chmod -R 775 /www
+
+# wordpress database creation
+sleep 10
+MYSQL="mysql -h mysql -u root"
+
+if ! $MYSQL -e 'use wordpress'
+then
+  $MYSQL -e 'CREATE DATABASE wordpress;'
+  $MYSQL wordpress < /wordpressconf.sql
+fi
+
 php -S 0.0.0.0:5050 -t /www/

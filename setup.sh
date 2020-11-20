@@ -6,7 +6,7 @@
 #    By: alromero <alromero@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/05/19 16:13:51 by alromero          #+#    #+#              #
-#    Updated: 2020/11/19 11:34:01 by alromero         ###   ########.fr        #
+#    Updated: 2020/11/20 14:33:18 by alromero         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -44,7 +44,7 @@ srcs/phpmyadmin/init.sh
 srcs/grafana/init.sh
 srcs/influxdb/init.sh
 srcs/ftps/init.sh
-#srcs/telegraf/init.sh
+srcs/telegraf/init.sh
 #docker build -t wordpress42 srcs/wordpress
 
 kubectl apply -f srcs/nginx.yml
@@ -54,4 +54,4 @@ kubectl apply -f srcs/wordpress.yml
 kubectl apply -f srcs/phpmyadmin.yml
 kubectl apply -f srcs/grafana.yml
 kubectl apply -f srcs/influxdb.yml
-#kubectl apply -f srcs/telegraf.yml
+kubectl apply -f srcs/telegraf.yml

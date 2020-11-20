@@ -13,7 +13,6 @@ RUN apk update\
 COPY wp-config.php /wordpress
 COPY setup.sh /
 RUN chmod -R 775 /wordpress && chmod 775 setup.sh
-COPY wordpress.sql /
 
 COPY setup.sh .
 

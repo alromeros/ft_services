@@ -1,21 +1,33 @@
-FROM alpine
+FROM alpine:latest
 
-RUN apk update \
-	&& apk add nginx \
-	&& apk add --no-cache --upgrade bash \
-	&& apk add openssl \
-	&& apk add openssh \
-	&& mkdir /run/nginx 
+RUN apk update && apk add nginx \
+&& apk add --no-cache --upgrade bash \
+&& apk add openssl && mkdir -p var/run/nginx \
+&& apk add openssl openssh \
+&& rm -rf /var/cache/apk/* \
+&& mkdir -p /www \
+&& mkdir -p /www/js \
+&& mkdir -p /www/css \
+&& mkdir -p /www/fonts
 
-ADD ./nginx.conf /etc/nginx/nginx.conf
+COPY ./fonts /www/fonts
+COPY ./index.html /www
+COPY ./js /www/js
+COPY ./css /www/css
 
-ADD ./index.html /var/www/index.html
 
-RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/private/nginx-selfsigned.key -out /etc/ssl/certs/nginx-selfsigned.crt -subj \
-	"/C=ES/ST=Madrid/L=Madrid/O=42"
+RUN mkdir -p /etc/nginx/ssl && openssl req -newkey rsa:2048 -x509 -days 365 -nodes -keyout /etc/nginx/ssl/services.key -out /etc/nginx/ssl/services.pem -subj "/C=FR/ST=Paris/L=Paris/O=42, Inc./OU=IT/CN=ft_services"
 
-RUN ssh-keygen -A
+RUN	usr/bin/ssh-keygen -A 
+COPY	sshd_config /etc/ssh/
+
+RUN rm /etc/nginx/nginx.conf
+COPY ./nginx.conf /etc/nginx/nginx.conf
+
+COPY setup.sh .
+
+RUN chmod +x setup.sh
 
 EXPOSE 80 22 443
 
-CMD  /usr/sbin/sshd; /usr/sbin/nginx -g 'daemon off;'
+CMD ./setup.sh

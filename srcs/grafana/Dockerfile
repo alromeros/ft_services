@@ -1,13 +1,25 @@
-FROM alpine:latest
+FROM alpine
 
-RUN apk update && apk add --ngo-cache --upgrade bash \
-    && mkdir grafana && cd grafana \
-    && apk add --no-cache --repository=http://dl-cdn.alpinelinux.org/alpine/edge/main libc6-compat \
-    && wget https://dl.grafana.com/oss/release/grafana-7.2.0.linux-amd64.tar.gz \
-    && tar -zxvf grafana-7.2.0.linux-amd64.tar.gz \
-    && cd /grafana/grafana-7.2.0/bin \
-    && setsid ./grafana-server > /dev/null 2>&1
+WORKDIR /usr/share/grafana
 
+RUN apk update && apk add bash curl wget grafana \
+--repository http://dl-cdn.alpinelinux.org/alpine/edge/testing/ \
+&& rm -rf /var/cache/apk/*
+
+COPY src/datasource.yaml /usr/share/grafana/conf/provisioning/datasources/
+
+RUN mkdir /usr/share/grafana/conf/provisioning/dashboards/mine
+COPY src/*.json /usr/share/grafana/conf/provisioning/dashboards/mine/
+
+RUN mkdir /etc/telegraf \
+&& wget https://dl.influxdata.com/telegraf/releases/telegraf-1.13.3-static_linux_amd64.tar.gz \
+&& tar -C . -xzf telegraf-1.13.3-static_linux_amd64.tar.gz \
+&& chmod 775 telegraf/* \
+&& cp telegraf/telegraf /usr/bin/ \
+&& rm -rf /var/cache/apk/*
+COPY telegraf.conf /etc/telegraf/telegraf.conf
+
+COPY start.sh /
 EXPOSE 3000
 
-CMD bash
+CMD bash /start.sh

@@ -9,12 +9,12 @@ RUN apk update \
 RUN mysql --version
 
 # Copy initialisation script
+COPY ./init_docker.sh .
 COPY ./setup.sh .
-COPY ./initsql.sh .
 COPY ./wordpress.sql .
 
 # Add permission
+RUN chmod 777 init_docker.sh
 RUN chmod 777 setup.sh
-RUN chmod 777 initsql.sh
 
-ENTRYPOINT [ "./setup.sh" ]
+ENTRYPOINT [ "./init_docker.sh" ]

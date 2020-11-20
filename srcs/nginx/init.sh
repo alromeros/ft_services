@@ -1,4 +1,4 @@
-#! /bin/sh
+#! /bin/bash
 
 docker rmi -f nginx42
 docker rm -f nginx42

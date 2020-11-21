@@ -56,3 +56,11 @@ datasources:
   secureJsonData:
     password: root
   url: http://influxdb:8086
+- name: telegraf
+  type: influxdb
+  access: proxy
+  database: telegraf
+  user: telegraf
+  secureJsonData:
+    password: root
+  url: http://influxdb:8086

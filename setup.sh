@@ -15,7 +15,7 @@
 GREEN='\x1b[32m'
 BLINK='\x1b[5m'
 
-echo -e $GREEN"Starting minikube"$BLINK
+echo -e $GREEN"Starting minikube"
 if [[ $(minikube status | grep -c “Running”) == 0 ]]
 then
     minikube start --cpus=2 --memory 4000 --vm-driver=virtualbox --extra-config=apiserver.service-node-port-range=1-35000
